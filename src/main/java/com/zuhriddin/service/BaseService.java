@@ -1,5 +1,7 @@
 package com.zuhriddin.service;
 
+import com.zuhriddin.model.Comment;
+
 import java.util.*;
 
 public interface BaseService<T, R> {
@@ -11,6 +13,4 @@ public interface BaseService<T, R> {
     List<T> list();
 
     void delete(R id);
-
-    T update(T t);
 }
