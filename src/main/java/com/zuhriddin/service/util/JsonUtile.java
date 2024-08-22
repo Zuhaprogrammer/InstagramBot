@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.*;
 
 @UtilityClass
-public class JsonUtil {
+public class JsonUtile {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @SneakyThrows
