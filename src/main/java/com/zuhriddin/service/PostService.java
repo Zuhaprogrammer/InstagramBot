@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class PostService implements BaseService<Post, UUID> {
     private static final String PATH = "src/main/java/com/zuhriddin/file/posts.json";
-    private static final UUID DEFAULT_USER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
 
     @Override
     public Post add(Post post) {
@@ -57,32 +56,34 @@ public class PostService implements BaseService<Post, UUID> {
     @Override
     public Post update(Post post) {
         List<Post> posts = read();
-        int index = posts.indexOf(posts.stream()
+        posts.stream()
                .filter(p -> p.getId().equals(post.getId()))
                .findFirst()
-               .orElseThrow(() -> new RuntimeException("Post not found")));
-        posts.set(index, post);
+               .ifPresent(post1 -> {
+                   post1.setTitle(post.getTitle());
+                   post1.setLocation(post.getLocation());
+               });
         write(posts);
         return post;
     }
 
     public List<Post> listMyPosts(UUID userId) {
         List<Post> posts = read();
-        if (posts == null || posts.isEmpty()) {
-            return Collections.emptyList();
-        }
+//        if (posts == null || posts.isEmpty()) {
+//            return Collections.emptyList();
+//        }
         return posts.stream()
                 .filter(post -> post.getUserId().equals(userId))
                 .collect(Collectors.toList());
     }
 
-    public List<Post> listOthersPosts() {
+    public List<Post> listOthersPosts(UUID userId) {
         List<Post> posts = read();
-        if (posts == null || posts.isEmpty()) {
-            return Collections.emptyList();
-        }
+//        if (posts == null || posts.isEmpty()) {
+//            return Collections.emptyList();
+//        }
         return posts.stream()
-                .filter(post -> !post.getUserId().equals(DEFAULT_USER_ID))
+                .filter(post -> !post.getUserId().equals(userId))
                 .collect(Collectors.toList());
     }
 

@@ -24,7 +24,8 @@ public class UserService implements BaseService<User, UUID>{
     private boolean has(User user, List<User> users) {
         return users.stream()
             .anyMatch(u -> u.getUsername().equals(user.getUsername()) &&
-                    u.getPhoneNumber().equals(user.getPhoneNumber()));
+                    u.getPhoneNumber().equals(user.getPhoneNumber()) &&
+                    u.getEmail().equals(user.getEmail()));
     }
 
     @Override
@@ -54,11 +55,17 @@ public class UserService implements BaseService<User, UUID>{
     @Override
     public User update(User user) {
         List<User> users = read();
-        int index = users.indexOf(users.stream()
+        users.stream()
                .filter(u -> u.getId().equals(user.getId()))
                .findFirst()
-               .orElseThrow(() -> new RuntimeException("No such user, found")));
-        users.set(index, user);
+               .ifPresent(user1 -> {
+                   user1.setUsername(user.getUsername());
+                   user1.setName(user.getName());
+                   user1.setPassword(user.getPassword());
+                   user1.setBio(user.getBio());
+                   user1.setImagePath(user.getImagePath());
+                   user1.setGender(user.getGender());
+               });
         write(users);
         return user;
     }
